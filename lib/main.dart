@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() => runApp(AlcoholControlApp());
@@ -45,117 +44,98 @@ enum AlcoholType {
   WhiteSpirit28,
 }
 
-String get_alcohol_name(AlcoholType at) {
+String getAlcoholName(AlcoholType at) {
   switch(at) {
     case AlcoholType.YellowRiseWine: {
       return "黄酒";
     }
-    break;
     case AlcoholType.Beer: {
       return "啤酒";
     }
-    break;
     case AlcoholType.Wine: {
       return "葡萄酒";
     }
-    break;
     case AlcoholType.WhiteSpirit28: {
       return "白酒 28°";
     }
-    break;
     case AlcoholType.WhiteSpirit35: {
       return "白酒 35°";
     }
-    break;
     case AlcoholType.WhiteSpirit38: {
       return "白酒 38°";
     }
-    break;
     case AlcoholType.WhiteSpirit40: {
       return "白酒 40°";
     }
-    break;
     case AlcoholType.WhiteSpirit48: {
       return "白酒 48°";
     }
-    break;
     case AlcoholType.WhiteSpirit50: {
       return "白酒 50°";
     }
-    break;
     case AlcoholType.WhiteSpirit53: {
       return "白酒 53°";
     }
-    break;
     case AlcoholType.WhiteSpirit56: {
       return "白酒 56°";
     }
-    break;
   }
+  return "";
 }
 
-double get_alcohol_deg(AlcoholType at) {
+double getAlcoholDeg(AlcoholType at) {
   switch(at) {
     case AlcoholType.YellowRiseWine: {
       return 0.20;
     }
-    break;
     case AlcoholType.Beer: {
       return 0.12;
     }
-    break;
     case AlcoholType.Wine: {
       return 0.18;
     }
-    break;
     case AlcoholType.WhiteSpirit28: {
       return 0.28;
     }
-    break;
     case AlcoholType.WhiteSpirit35: {
       return 0.35;
     }
-    break;
     case AlcoholType.WhiteSpirit38: {
       return 0.38;
     }
-    break;
     case AlcoholType.WhiteSpirit40: {
       return 0.40;
     }
-    break;
     case AlcoholType.WhiteSpirit48: {
       return 0.48;
     }
-    break;
     case AlcoholType.WhiteSpirit50: {
       return 0.50;
     }
-    break;
     case AlcoholType.WhiteSpirit53: {
       return 0.53;
     }
-    break;
     case AlcoholType.WhiteSpirit56: {
       return 0.56;
     }
   }
+  return 0;
 }
 
 // Get the max drink limit of liquid in mili-litre 
-double get_drink_limit(double alcohol_amount, double deg) {
-  return alcohol_amount / deg * 1.25;
+double getDrinkLimit(double alcoholAmount, double deg) {
+  return alcoholAmount / deg * 1.25;
 }
 
-String format_output(double drink_limit) {
-  int jin = (drink_limit / 500).floor();
-  int liang = ((drink_limit - 500 * jin) / 50).floor();
+String formatOutput(double drinkLimit) {
+  int jin = (drinkLimit / 500).floor();
+  int liang = ((drinkLimit - 500 * jin) / 50).floor();
 
   String outstr = "";
 
-  if (drink_limit >= 25 && drink_limit < 50) {
+  if (drinkLimit >= 25 && drinkLimit < 50) {
     return "半两";
-  } else if (drink_limit < 25) {
+  } else if (drinkLimit < 25) {
     return "一丢丢";
   }
 
@@ -188,34 +168,34 @@ class AlcoholControlHomePage extends StatefulWidget {
 
 class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
   // Limit of grams of alcohol per day
-  final double _daily_volume = 40.0;
-  final double _occational_volume = 80.0;
+  final double _dailyVolume = 40.0;
+  final double _occationalVolume = 80.0;
 
   DrinkFreq _freq = DrinkFreq.daily;
   AlcoholType _typ = AlcoholType.YellowRiseWine;
 
-  void _switch_freq(freq) {
+  void _switchFreq(freq) {
     setState(() {
       _freq = freq;
     });
   }
 
-  void _switch_typ(typ) {
+  void _switchTyp(typ) {
     setState(() {
       _typ = typ;
     });
   }
 
-  Widget _build_type_btn(AlcoholType at) {
+  Widget _buildTypeBtn(AlcoholType at) {
     return RaisedButton(
-      child: Text(get_alcohol_name(at), style: TextStyle(fontSize: 20, color: Color(0xFFEEE8D5))),
-      onPressed: _typ == at ? null : () => _switch_typ(at),
+      child: Text(getAlcoholName(at), style: TextStyle(fontSize: 20, color: Color(0xFFEEE8D5))),
+      onPressed: _typ == at ? null : () => _switchTyp(at),
       disabledColor: Colors.green,
       color: Colors.grey,
     );
   }
 
-  Widget _build_output_row(String description, double drink_limit) {
+  Widget _buildOutputRow(String description, double drinkLimit) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget> [
@@ -224,11 +204,11 @@ class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
             Text(
-              format_output(drink_limit),
+              formatOutput(drinkLimit),
               style: TextStyle(fontSize: 30, color: Colors.brown),
             ),
             Text(
-              "(" + drink_limit.round().toString() + " ml)",
+              "(" + drinkLimit.round().toString() + " ml)",
               style: TextStyle(fontSize: 28, color: Colors.brown),
             ),
           ],
@@ -245,9 +225,9 @@ class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    double drink_limit = get_drink_limit(
-      _freq == DrinkFreq.daily ? _daily_volume : _occational_volume,
-      get_alcohol_deg(_typ)
+    double drinkLimit = getDrinkLimit(
+      _freq == DrinkFreq.daily ? _dailyVolume : _occationalVolume,
+      getAlcoholDeg(_typ)
     );
 
     return Scaffold(
@@ -286,7 +266,7 @@ class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
               children: <Widget> [
                 RaisedButton(
                   child: Text('每天喝', style: TextStyle(fontSize: 20, color: Color(0xFFEEE8D5))),
-                  onPressed: _freq == DrinkFreq.daily ? null : () => _switch_freq(DrinkFreq.daily),
+                  onPressed: _freq == DrinkFreq.daily ? null : () => _switchFreq(DrinkFreq.daily),
                   disabledColor: Colors.green,
                   color: Colors.grey,
                 ),
@@ -294,7 +274,7 @@ class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
                   child: Text('聚会喝', style: TextStyle(fontSize: 20, color: Color(0xFFEEE8D5))),
                   onPressed: _freq == DrinkFreq.occational
                     ? null
-                    : () => _switch_freq(DrinkFreq.occational),
+                    : () => _switchFreq(DrinkFreq.occational),
                   disabledColor: Colors.green,
                   color: Colors.grey,
                 ),
@@ -310,26 +290,26 @@ class _AlcoholControlHomePageState extends State<AlcoholControlHomePage> {
               spacing: 1.0,
               alignment: WrapAlignment.spaceBetween,
               children: <Widget> [
-                _build_type_btn(AlcoholType.YellowRiseWine),
-                _build_type_btn(AlcoholType.Beer),
-                _build_type_btn(AlcoholType.Wine),
-                _build_type_btn(AlcoholType.WhiteSpirit28),
-                _build_type_btn(AlcoholType.WhiteSpirit35),
-                _build_type_btn(AlcoholType.WhiteSpirit38),
-                _build_type_btn(AlcoholType.WhiteSpirit40),
-                _build_type_btn(AlcoholType.WhiteSpirit48),
-                _build_type_btn(AlcoholType.WhiteSpirit50),
-                _build_type_btn(AlcoholType.WhiteSpirit53),
-                _build_type_btn(AlcoholType.WhiteSpirit56),
+                _buildTypeBtn(AlcoholType.YellowRiseWine),
+                _buildTypeBtn(AlcoholType.Beer),
+                _buildTypeBtn(AlcoholType.Wine),
+                _buildTypeBtn(AlcoholType.WhiteSpirit28),
+                _buildTypeBtn(AlcoholType.WhiteSpirit35),
+                _buildTypeBtn(AlcoholType.WhiteSpirit38),
+                _buildTypeBtn(AlcoholType.WhiteSpirit40),
+                _buildTypeBtn(AlcoholType.WhiteSpirit48),
+                _buildTypeBtn(AlcoholType.WhiteSpirit50),
+                _buildTypeBtn(AlcoholType.WhiteSpirit53),
+                _buildTypeBtn(AlcoholType.WhiteSpirit56),
               ],
             ),
 
             // Outputs
             Expanded(
-              child: _build_output_row("今天最多饮酒 ", drink_limit),
+              child: _buildOutputRow("今天最多饮酒 ", drinkLimit),
             ),
             Expanded(
-              child: _build_output_row("每顿最多饮酒 ", drink_limit / 2),
+              child: _buildOutputRow("每顿最多饮酒 ", drinkLimit / 2),
             ),
           ],
         ),
